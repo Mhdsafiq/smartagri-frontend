@@ -48,14 +48,28 @@ const FertilizerRecommendation = () => {
 
         try {
             const response = await axios.post('https://smartagri-backend.onrender.com/api/predict-fertilizer', formData, {
-s
+                s
 
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
             setResult(response.data);
         } catch (err) {
-            console.error(err);
-            setError(err.response?.data?.error || 'Failed to analyze image. Please try again.');
+            console.error("Error analyzing image:", err);
+
+            let errorMessage = 'Failed to analyze image. Please try again.';
+
+            if (err.response) {
+                // Server returned a response code outside 2xx
+                errorMessage = err.response.data?.error || `Server Error: ${err.response.statusText}`;
+            } else if (err.request) {
+                // Request was made but no response received (timeout, network error)
+                errorMessage = "Network Error: No response from server. It might be waking up (wait 1 min) or timed out.";
+            } else {
+                // Something happened in setting up the request
+                errorMessage = err.message;
+            }
+
+            setError(errorMessage);
         } finally {
             setLoading(false);
         }
