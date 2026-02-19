@@ -47,7 +47,9 @@ const FertilizerRecommendation = () => {
         formData.append('unit', unit);
 
         try {
-            const response = await axios.post('/api/predict-fertilizer', formData, {
+            const response = await axios.post('https://smartagri-backend.onrender.com/api/predict-fertilizer', formData, {
+s
+
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
             setResult(response.data);
